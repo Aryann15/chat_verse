@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import styled from "styled-component";
+import styled from "styled-components";
 import io from "socket.io-client";
 
 const Page = styled.div`
@@ -94,21 +94,21 @@ const PartnerMessage = styled.div`
 const App = () => {
   const [yourId, setYourId] = useState();
   const [messages, setMessages] = useState([]);
-  const [message, setMessage] = useState();
+  const [message, setMessage] = useState("");
 
   const socketRef = useRef();
 
   useEffect(() => {
-    socket.current = io.connect("/");
+    socketRef.current = io.connect(window.location.origin);
     socketRef.current.on("your id", (id) => {
       setYourId(id);
     });
     socketRef.current.on("message", (msg) => {
-      receivedMessage(message);
+      receivedMessage(msg);
     });
   }, []);
-  function receivedMessage(message) {
-    setMessage((oldMsgs) => [...oldMsgs, message]);
+  function receivedMessage(msg) {
+    setMessage((oldMsgs) => [...oldMsgs, msg]);
   }
 
   function sendMessage(e) {
@@ -145,7 +145,11 @@ const App = () => {
       </Container>
       <Form onSubmit={sendMessage}>
         <TextArea value={message} onChange={handleChange} placeholder="Say Something ..."/>
+        <Button>
+        Send
+      </Button>
       </Form>
+      
     </Page>
   );
 };

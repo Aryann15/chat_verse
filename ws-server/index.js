@@ -1,22 +1,19 @@
 const express = require('express');
-const { createServer } = require('node:http');
-const { join } = require('node:path');
-const { Server } = require('socket.io');
-
+const http = require ("http");
 const app = express();
-const server = createServer(app);
-const io = new Server(server);
+const server = http.createServer(app);
+const socket = require ("socket.io")
+const io = socket(server);
 
-app.get('/', (req, res) => {
-  res.sendFile(join(__dirname, 'index.html'));
-});
 
 io.on('connection', (socket) => {
-  socket.on('chat message', (msg) => {
-    io.emit('chat message', msg);
+  socket.emit("your id", socket.id);
+  socket.on('send message', (msg) => {
+    io.emit('message', msg);
   });
 });
 
-server.listen(3000, () => {
-  console.log('server running at http://localhost:3000');
+const PORT = process.env.port || 3000;
+server.listen(PORT, () => {
+  console.log(`server running at http://localhost:${PORT}`);
 });
