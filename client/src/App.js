@@ -3,7 +3,7 @@ import styled from "styled-component";
 import io from "socket.io-client";
 
 const App = () => {
-  const [uourId, setYourId] = useState();
+  const [yourId, setYourId] = useState();
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState();
 
@@ -22,4 +22,21 @@ const App = () => {
   function receivedMessage (message) {
     setMessage(oldMsgs =>[...oldMsgs, message])
   }
+
+  function sendMessage (e){
+    e.preventDefault();
+    const messageObject = {
+      body: message,
+      id: yourId,
+    };
+    setMessage("");
+    socketRef.current.emit("send message", messageObject);
+  }
+
+
+  
+return {
+
+}
+
 };
